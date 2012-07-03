@@ -64,6 +64,13 @@
                             {
                                 "command": "open_file",
                                 "args": {
+                                    "file": "${packages}/User/Csslisible.sublime-settings"
+                                },
+                                "caption": "Change csslisible output settings"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {
                                     "file": "${packages}/User/Default (Linux).sublime-keymap",
                                     "platform": "Linux"
                                 },

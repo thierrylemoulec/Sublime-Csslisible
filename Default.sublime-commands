@@ -1,6 +1,6 @@
 [
     {
-        "caption": "Run Csslisible on the selection",
+        "caption": "Csslisible : Run",
         "command": "csslisible"
     },
     {
