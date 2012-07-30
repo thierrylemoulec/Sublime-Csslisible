@@ -5,8 +5,13 @@ A plugin for [Sublime Text 2](http://sublimetext.com/2), that runs your ugly CSS
 ## Installation
 
 * Recommended - Using Sublime Package Control  
+<<<<<<< HEAD
   * `ctrl+shft+p` then select `Package Control: Install Package`
   * `install Csslisible`
+=======
+	* `ctrl+shft+p` or `super+shift+p` on osx then select `Package Control: Install Package`
+	* `install Csslisible`
+>>>>>>> 43341260e058045eda3995bd86cb25987556532d
 
 *Using Package Control ensures Sublime Csslisible will stay up to date automatically.*
 
