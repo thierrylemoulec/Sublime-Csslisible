@@ -12,8 +12,8 @@ A plugin for [Sublime Text 2](http://sublimetext.com/2), that runs your ugly CSS
 
 * Alternatively, download the package from GitHub into your Packages folder (on OSX):
 
-      cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-      git clone git@github.com:thierrylemoulec/Sublime-Csslisible.git
+        cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+        git clone git@github.com:thierrylemoulec/Sublime-Csslisible.git
 
 ## Usage
 
