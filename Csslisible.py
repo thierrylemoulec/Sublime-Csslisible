@@ -38,7 +38,7 @@ class CsslisibleCommand(sublime_plugin.TextCommand):
             if thread.is_alive():
                 next_threads.append(thread)
                 continue
-            if thread.result == False:
+            if not thread.result:
                 continue
             offset = self.replace(edit, thread, offset)
         threads = next_threads
@@ -52,19 +52,19 @@ class CsslisibleCommand(sublime_plugin.TextCommand):
             if not before:
                 dir = 1
             i += dir
-            self.view.set_status('csslisible', 'Csslisible [%s=%s]' % \
-                (' ' * before, ' ' * after))
+            self.view.set_status('csslisible', 'Csslisible [%s=%s]'
+                % (' ' * before, ' ' * after))
 
             sublime.set_timeout(lambda: self.handle_threads(edit, threads,
-                                offset, i, dir), 100)
+                offset, i, dir), 100)
             return
 
         self.view.end_edit(edit)
 
         self.view.erase_status('csslisible')
         selections = len(self.view.sel())
-        sublime.status_message('Csslisible successfully run on %s selection%s' %
-            (selections, '' if selections == 1 else 's'))
+        sublime.status_message('Csslisible successfully run on %s selection%s'
+            % (selections, '' if selections == 1 else 's'))
 
     def replace(self, edit, thread, offset):
         sel = thread.sel
@@ -101,23 +101,23 @@ class CssLisibleApiCall(threading.Thread):
         self.original = string
         self.result = None
         self.distance_selecteurs = settings.get('distance_selecteurs')
-        self.type_indentation = settings.get('type_indentation'),
-        self.type_separateur = settings.get('type_separateur'),
-        self.hex_colors_format = settings.get('hex_colors_format'),
-        self.selecteurs_multiples_separes = settings.get('selecteurs_multiples_separes'),
-        threading.Thread.__init__(self)
+        self.type_indentation = settings.get('type_indentation')
+        self.type_separateur = settings.get('type_separateur')
+        self.hex_colors_format = settings.get('hex_colors_format')
+        self.selecteurs_multiples_separes = settings.get('selecteurs_multiples_separes')
+        super(CssLisibleApiCall, self).__init__()
 
     def run(self):
         try:
             payload = {
-                        'api': '1',
-                        'distance_selecteurs': self.distance_selecteurs,
-                        'type_indentation': self.type_indentation,
-                        'type_separateur': self.type_separateur,
-                        'hex_colors_format': self.hex_colors_format,
-                        'selecteurs_multiples_separes': self.selecteurs_multiples_separes,
-                        'clean_css': self.original
-                    }
+                'api': '1',
+                'distance_selecteurs': self.distance_selecteurs,
+                'type_indentation': self.type_indentation,
+                'type_separateur': self.type_separateur,
+                'hex_colors_format': self.hex_colors_format,
+                'selecteurs_multiples_separes': self.selecteurs_multiples_separes,
+                'clean_css': self.original
+            }
             data = requests.post("http://csslisible.com/", payload)
             self.result = data.text
             return
