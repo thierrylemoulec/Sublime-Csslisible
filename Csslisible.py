@@ -119,6 +119,7 @@ class CssLisibleApiCall(threading.Thread):
                         'clean_css': self.original
                     }
             data = requests.post("http://csslisible.com/", payload)
+            data.encoding = 'utf-8'
             self.result = data.text
             return
 
