@@ -66,7 +66,7 @@
                                 "args": {
                                     "file": "${packages}/User/Csslisible.sublime-settings"
                                 },
-                                "caption": "Change csslisible output settings"
+                                "caption": "Change csslisible settings"
                             },
                             {
                                 "command": "open_file",

@@ -4,5 +4,7 @@
   "distance_selecteurs": "1",
   "type_indentation": "1",
   "type_separateur": "2",
-  "hex_colors_format": "0"
+  "hex_colors_format": "0",
+  // Select a different url for the csslisible API
+  "csslisible_URL": "http://csslisible.com/"
 }

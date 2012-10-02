@@ -105,6 +105,7 @@ class CssLisibleApiCall(threading.Thread):
         self.type_separateur = settings.get('type_separateur')
         self.hex_colors_format = settings.get('hex_colors_format')
         self.selecteurs_multiples_separes = settings.get('selecteurs_multiples_separes')
+        self.csslisible_URL = settings.get('csslisible_URL')
         super(CssLisibleApiCall, self).__init__()
 
     def run(self):
@@ -118,7 +119,7 @@ class CssLisibleApiCall(threading.Thread):
                 'selecteurs_multiples_separes': self.selecteurs_multiples_separes,
                 'clean_css': self.original
             }
-            data = requests.post("http://csslisible.com/", payload)
+            data = requests.post(self.csslisible_URL, payload)
             data.encoding = 'utf-8'
             self.result = data.text
             return
