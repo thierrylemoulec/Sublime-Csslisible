@@ -36,9 +36,11 @@ A plugin for [Sublime Text 2](http://sublimetext.com/2), that runs your ugly CSS
 'distance_selecteurs' : (0,/1/,2) : Number of lines separating multiple selectors.  
 'type_indentation' : (0,1,2,/3/,4,5,6) : Chosen type of indentation.  
 'type_separateur' : (0,1,/2/,3) : Type of separator between properties and value.  
-'selecteurs_multiples_separes' : (0,/1/) : Adding a carriage return after each part of a multiple selector. (Boolean)  
+'selecteurs_multiples_separes' : (0,/1/) : Adding a carriage return after each part of a multiple selector. (Boolean)
+'valeurs_multiples_separees' : (0,/1/) : Adding a carriage return after each comma in a multiple value. (Boolean)
 'hex_colors_format' : (/0/,1,2) : Formatting colors (# fff to # FFF, and vice versa).  
 'colors_format' : (/0/,1,2,3) : Advanced formatting of colors.
+'raccourcir_valeurs' : (/0/,1) : Using CSS shortcuts on values with 4 numericals parameters. (Boolean)
 
 ### Parameters values
 

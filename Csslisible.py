@@ -103,10 +103,11 @@ class CssLisibleApiCall(threading.Thread):
         self.distance_selecteurs = settings.get('distance_selecteurs')
         self.type_indentation = settings.get('type_indentation')
         self.type_separateur = settings.get('type_separateur')
-        self.hex_colors_format = settings.get('hex_colors_format')
         self.selecteurs_multiples_separes = settings.get('selecteurs_multiples_separes')
+        self.valeurs_multiples_separees = settings.get('valeurs_multiples_separees')
+        self.hex_colors_format = settings.get('hex_colors_format')
+        self.colors_format = settings.get('colors_format')
         self.raccourcir_valeurs = settings.get('raccourcir_valeurs')
-        self.selecteur_par_ligne = settings.get('selecteur_par_ligne')
         self.csslisible_URL = settings.get('csslisible_URL')
         super(CssLisibleApiCall, self).__init__()
 
@@ -117,10 +118,11 @@ class CssLisibleApiCall(threading.Thread):
                 'distance_selecteurs': self.distance_selecteurs,
                 'type_indentation': self.type_indentation,
                 'type_separateur': self.type_separateur,
-                'hex_colors_format': self.hex_colors_format,
                 'selecteurs_multiples_separes': self.selecteurs_multiples_separes,
+                'valeurs_multiples_separees': self.valeurs_multiples_separees,
+                'hex_colors_format': self.hex_colors_format,
+                'colors_format': self.colors_format,
                 'raccourcir_valeurs': self.raccourcir_valeurs,
-                'selecteur_par_ligne': self.selecteur_par_ligne,
                 'clean_css': self.original
             }
             data = requests.post(self.csslisible_URL, payload)
