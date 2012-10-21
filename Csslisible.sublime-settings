@@ -2,10 +2,10 @@
   // See the readme here https://github.com/thierrylemoulec/Sublime-Csslisible
   // for all the settings offered by the API
   "distance_selecteurs": "1",
-  "type_indentation": "1",
+  "type_indentation": "3",
   "type_separateur": "2",
   "selecteurs_multiples_separes": "1",
-  "valeurs_multiples_separees": "1",
+  "valeurs_multiples_separees": "0",
   "hex_colors_format": "0",
   "colors_format": "0",
   "raccourcir_valeurs": "0",
