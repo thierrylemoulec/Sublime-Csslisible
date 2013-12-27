@@ -1,6 +1,6 @@
 # Sublime CssLisible
 
-A plugin for [Sublime Text 2](http://sublimetext.com/2), that runs your ugly CSS through the [http://csslisible.com/](http://csslisible.com/) API.
+A plugin for [Sublime Text 3](http://sublimetext.com/3), that runs your ugly CSS through the [http://csslisible.com/](http://csslisible.com/) API.
 
 ## Installation
 
@@ -12,7 +12,7 @@ A plugin for [Sublime Text 2](http://sublimetext.com/2), that runs your ugly CSS
 
 * Alternatively, download the package from GitHub into your Packages folder (on OSX):
 
-        cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+        cd ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/
         git clone git@github.com:thierrylemoulec/Sublime-Csslisible.git
 
 ## Usage
