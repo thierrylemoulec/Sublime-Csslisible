@@ -1,89 +1,28 @@
+import http
 import sublime
 import sublime_plugin
-import requests
-import threading
-
-settings = sublime.load_settings('Csslisible.sublime-settings')
+import urllib
 
 
 class CsslisibleCommand(sublime_plugin.TextCommand):
+    def __init__(self, *args, **kwargs):
+        super(CsslisibleCommand, self).__init__(*args, **kwargs)
+        self.settings = sublime.load_settings('Csslisible.sublime-settings')
+
     def run(self, edit):
         # We check for selections if no selections are present we run the API
-        # on the all file
-        sels = self.view.sel()
+        # on the whole file
+        regions = self.view.sel()
 
-        if len(sels[0]) == 0 and self.view.size() > 0:
-            sels = [sublime.Region(0, self.view.size())]
+        if len(regions[0]) == 0 and self.view.size() > 0:
+            regions = [sublime.Region(0, self.view.size())]
 
-        # We start one thread per selection so we don't lock up the interface
-        # while waiting for the response from the API
-        threads = []
-        for sel in sels:
-            string = self.view.substr(sel)
-            thread = CssLisibleApiCall(sel, string)
-            threads.append(thread)
-            thread.start()
-
-        # We clear all selection because we are going to manually set them
-        self.view.sel().clear()
-
-        # This creates an edit group so we can undo all changes in one go
-        edit = self.view.begin_edit('csslisible')
-
-        self.handle_threads(edit, threads)
-
-    def handle_threads(self, edit, threads, offset=0, i=0, dir=1):
-        next_threads = []
-        for thread in threads:
-            if thread.is_alive():
-                next_threads.append(thread)
-                continue
-            if not thread.result:
-                continue
-            offset = self.replace(edit, thread, offset)
-        threads = next_threads
-
-        if len(threads):
-            # This animates a little activity indicator in the status area
-            before = i % 8
-            after = (7) - before
-            if not after:
-                dir = -1
-            if not before:
-                dir = 1
-            i += dir
-            self.view.set_status('csslisible', 'Csslisible [%s=%s]'
-                % (' ' * before, ' ' * after))
-
-            sublime.set_timeout(lambda: self.handle_threads(edit, threads,
-                offset, i, dir), 100)
-            return
-
-        self.view.end_edit(edit)
-
-        self.view.erase_status('csslisible')
-        selections = len(self.view.sel())
-        sublime.status_message('Csslisible successfully run on %s selection%s'
-            % (selections, '' if selections == 1 else 's'))
-
-    def replace(self, edit, thread, offset):
-        sel = thread.sel
-        original = thread.original
-        result = thread.result
-
-        # Here we adjust each selection for any text we have already inserted
-        if offset:
-            sel = sublime.Region(sel.begin() + offset,
-                sel.end() + offset)
-
-        result = self.normalize_line_endings(result)
-        self.view.replace(edit, sel, result)
-
-        # We add the end of the new text to the selection
-        end_point = sel.begin() + len(result)
-        self.view.sel().add(sublime.Region(end_point, end_point))
-
-        return offset + len(result) - len(original)
+        for region in regions:
+            original = self.view.substr(region)
+            result = self.cssLisibleApiCall(original)
+            if result:
+                result = self.normalize_line_endings(result)
+                self.view.replace(edit, region, result)
 
     def normalize_line_endings(self, string):
         string = string.replace('\r\n', '\n').replace('\r', '\n')
@@ -94,44 +33,30 @@ class CsslisibleCommand(sublime_plugin.TextCommand):
             string = string.replace('\n', '\r')
         return string
 
+    def cssLisibleApiCall(self, string):
+        url = urllib.parse.urlparse(self.settings.get('csslisible_URL'))
+        data = {
+            'api': '1',
+            'clean_css': string,
 
-class CssLisibleApiCall(threading.Thread):
-    def __init__(self, sel, string):
-        self.sel = sel
-        self.original = string
-        self.result = None
-        self.distance_selecteurs = settings.get('distance_selecteurs')
-        self.type_indentation = settings.get('type_indentation')
-        self.type_separateur = settings.get('type_separateur')
-        self.selecteurs_multiples_separes = settings.get('selecteurs_multiples_separes')
-        self.valeurs_multiples_separees = settings.get('valeurs_multiples_separees')
-        self.hex_colors_format = settings.get('hex_colors_format')
-        self.colors_format = settings.get('colors_format')
-        self.raccourcir_valeurs = settings.get('raccourcir_valeurs')
-        self.csslisible_URL = settings.get('csslisible_URL')
-        super(CssLisibleApiCall, self).__init__()
-
-    def run(self):
+            'distance_selecteurs': self.settings.get('distance_selecteurs'),
+            'type_indentation': self.settings.get('type_indentation'),
+            'type_separateur': self.settings.get('type_separateur'),
+            'selecteurs_multiples_separes': self.settings.get('selecteurs_multiples_separes'),
+            'valeurs_multiples_separees': self.settings.get('valeurs_multiples_separees'),
+            'hex_colors_format': self.settings.get('hex_colors_format'),
+            'colors_format': self.settings.get('colors_format'),
+            'raccourcir_valeurs': self.settings.get('raccourcir_valeurs'),
+        }
+        params = urllib.parse.urlencode(data)
+        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
         try:
-            payload = {
-                'api': '1',
-                'distance_selecteurs': self.distance_selecteurs,
-                'type_indentation': self.type_indentation,
-                'type_separateur': self.type_separateur,
-                'selecteurs_multiples_separes': self.selecteurs_multiples_separes,
-                'valeurs_multiples_separees': self.valeurs_multiples_separees,
-                'hex_colors_format': self.hex_colors_format,
-                'colors_format': self.colors_format,
-                'raccourcir_valeurs': self.raccourcir_valeurs,
-                'clean_css': self.original
-            }
-            data = requests.post(self.csslisible_URL, payload)
-            data.encoding = 'utf-8'
-            self.result = data.text
-            return
-
-        except (requests.HTTPError) as (e):
-            err = '%s: HTTP error %s contacting API' % (__name__, str(e.code))
-
-        sublime.error_message(err)
-        self.result = False
+            conn = http.client.HTTPConnection(url.netloc, timeout=5)
+            conn.request("POST", url.path, params, headers)
+        except http.client.HTTPException as e:
+            sublime.error_message('%s: HTTP error %s contacting API' % (__name__, str(e)))
+        else:
+            response = conn.getresponse().read()
+            conn.close()
+            return str(response, encoding='UTF-8')
+        return False
