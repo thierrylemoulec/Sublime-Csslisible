@@ -5,7 +5,7 @@ A plugin for [Sublime Text 3](http://sublimetext.com/3), that runs your ugly CSS
 ## Installation
 
 * Recommended - Using Sublime Package Control  
-  * `ctrl+shft+p` or `super+shift+p` on osx then select `Package Control: Install Package`
+  * `ctrl+shift+p` or `super+shift+p` on osx then select `Package Control: Install Package`
   * `install Csslisible`
 
 *Using Package Control ensures Sublime Csslisible will stay up to date automatically.*
