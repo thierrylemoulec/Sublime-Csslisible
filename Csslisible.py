@@ -34,7 +34,7 @@ class CsslisibleCommand(sublime_plugin.TextCommand):
         return string
 
     def cssLisibleApiCall(self, string):
-        url = urllib.parse.urlparse(self.settings.get('csslisible_URL'))
+        url = self.settings.get('csslisible_URL')
         data = {
             'api': '1',
             'clean_css': string,
@@ -49,14 +49,12 @@ class CsslisibleCommand(sublime_plugin.TextCommand):
             'raccourcir_valeurs': self.settings.get('raccourcir_valeurs'),
         }
         params = urllib.parse.urlencode(data)
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+        params = params.encode('utf8')
         try:
-            conn = http.client.HTTPConnection(url.netloc, timeout=5)
-            conn.request("POST", url.path, params, headers)
+            urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) )
+            response = urllib.request.urlopen(url, params, 5).read()
         except http.client.HTTPException as e:
             sublime.error_message('%s: HTTP error %s contacting API' % (__name__, str(e)))
         else:
-            response = conn.getresponse().read()
-            conn.close()
             return str(response, encoding='UTF-8')
         return False
